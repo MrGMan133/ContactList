@@ -1,6 +1,9 @@
 package controller;
 
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import galekop.be.ContactList.MainApp;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +19,7 @@ import model.Person;
 import persistency.PersonDAO;
 
 public class MainViewController {
+	private static Logger log = Logger.getLogger(MainViewController.class.getName());
 	private MainApp mainApp;
 	private PersonDAO personDAO = new PersonDAO();
 	@FXML
@@ -31,9 +35,8 @@ public class MainViewController {
     
     private ObservableList<Person> personData = FXCollections.observableArrayList();
     
-    
     public void initialize() {
-        personListView.setItems(personData);
+    	this.setListViewFromDb();
         //Selected item listener
         personListView.getSelectionModel().selectedItemProperty().addListener(
         		new ChangeListener<Person>() {
@@ -51,6 +54,15 @@ public class MainViewController {
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
     }
+    //populate listview from db
+    private void setListViewFromDb() {
+    	personListView.getItems().clear();
+    	List<Person> source = personDAO.findAll();
+    	for (Person person : source) {
+			personData.add(person);
+		}
+    	personListView.setItems(personData);
+    }
     //Show the content in the details pane
     private void showPersonDetails(Person person) {
         if (person != null) {
@@ -67,22 +79,7 @@ public class MainViewController {
             phoneLabel.setText("");
         }
     }
-    //Handle the deletebutton
-    @FXML
-    private void handleDeletePerson() {
-	 int selectedIndex = personListView.getSelectionModel().getSelectedIndex();
-	    if (selectedIndex >= 0) {
-	    	personListView.getItems().remove(selectedIndex);
-	    } else {
-	        // Nothing selected.
-	        Alert alert = new Alert(AlertType.WARNING);
-	        alert.setTitle("No Selection");
-	        alert.setHeaderText("No Person Selected");
-	        alert.setContentText("Please select a person in the table.");
-
-	        alert.showAndWait();
-	    }
-    }
+ 
     
     /**
      * Called when the user clicks the new button. Opens a dialog to edit
@@ -95,6 +92,7 @@ public class MainViewController {
         if (okClicked) {
         	this.getPersonData().add(tempPerson);
         	personDAO.save(tempPerson);
+        	log.info("Person: " + tempPerson.toString() + " saved.");
         }
     }
 
@@ -109,6 +107,9 @@ public class MainViewController {
             boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
             if (okClicked) {
                 showPersonDetails(selectedPerson);
+                personDAO.update(selectedPerson);
+                log.info("Person: " + selectedPerson.toString() + " updated.");
+                this.setListViewFromDb();
             }
 
         } else {
@@ -121,6 +122,25 @@ public class MainViewController {
             alert.showAndWait();
         }
     }
+    //Handle the deletebutton
+    @FXML
+    private void handleDeletePerson() {
+    	Person selectedPerson = personListView.getSelectionModel().getSelectedItem();
+	    if (selectedPerson != null) {
+	    	personDAO.remove(selectedPerson);
+	    	log.info("Person: " + selectedPerson.toString() + " removed.");
+	    	this.setListViewFromDb();
+	    } else {
+	        // Nothing selected.
+	        Alert alert = new Alert(AlertType.WARNING);
+	        alert.setTitle("No Selection");
+	        alert.setHeaderText("No Person Selected");
+	        alert.setContentText("Please select a person in the table.");
+
+	        alert.showAndWait();
+	    }
+    }
+    //Handle close
     @FXML
     private void handleClose() {
     	Platform.exit();

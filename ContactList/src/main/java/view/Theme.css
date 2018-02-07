@@ -1,5 +1,23 @@
-@charset "ISO-8859-1";
-
+.root {
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: #353434;
+    -fx-foreground-color: #353434;
+}
+.split-pane{
+	-fx-background-color: #353434;
+    -fx-foreground-color: #353434;
+}
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: #6d6b6b;
+}
+.list-view{
+	-fx-background-color: #353434;
+    -fx-foreground-color: #353434;
+}
+.menu-bar {
+    -fx-background-color: #6d6b6b;
+}
 .background {
     -fx-background-color: #1d1d1d;
 }
@@ -95,6 +113,11 @@
     -fx-font-family: "Segoe UI Semibold";
 }
 
+/* 
+ * Metro style Push Button
+ * Author: Pedro Duque Vieira
+ * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
+ */
 .button {
     -fx-padding: 5 22 5 22;   
     -fx-border-color: #e2e2e2;

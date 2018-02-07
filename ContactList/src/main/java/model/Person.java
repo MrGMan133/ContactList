@@ -27,10 +27,13 @@ public class Person {
 	public Person(String  firstName, String  lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.eMail = "some@email.com";
-		this.phoneNumber = "+324111111";
+		this.eMail = " ";
+		this.phoneNumber = " ";
 	}
 	public Person() { this(null, null); }
+	public int getIdPerson() {
+		return this.idperson;
+	}
 	public String  getFirstName() {
 		return firstName;
 	}
