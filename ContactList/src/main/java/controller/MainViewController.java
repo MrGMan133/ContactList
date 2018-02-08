@@ -2,6 +2,7 @@ package controller;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import galekop.be.ContactList.MainApp;
@@ -12,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -118,7 +120,6 @@ public class MainViewController {
             alert.setTitle("No Selection");
             alert.setHeaderText("No Person Selected");
             alert.setContentText("Please select a person in the table.");
-
             alert.showAndWait();
         }
     }
@@ -127,9 +128,17 @@ public class MainViewController {
     private void handleDeletePerson() {
     	Person selectedPerson = personListView.getSelectionModel().getSelectedItem();
 	    if (selectedPerson != null) {
-	    	personDAO.remove(selectedPerson);
-	    	log.info("Person: " + selectedPerson.toString() + " removed.");
-	    	this.setListViewFromDb();
+	    	Alert alert = new Alert(AlertType.CONFIRMATION);
+	    	alert.setTitle("Confirmation");
+	    	alert.setHeaderText(null);
+	    	alert.setContentText("Are you sure you want to delete?");
+	    	Optional<ButtonType> action = alert.showAndWait();
+	    	if (action.get() == ButtonType.OK) {
+	    		personDAO.remove(selectedPerson);
+		    	log.info("Person: " + selectedPerson.toString() + " removed.");
+		    	this.setListViewFromDb();
+			}
+	    	
 	    } else {
 	        // Nothing selected.
 	        Alert alert = new Alert(AlertType.WARNING);
