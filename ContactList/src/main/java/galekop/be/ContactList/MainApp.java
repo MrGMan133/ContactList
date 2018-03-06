@@ -22,7 +22,6 @@ public class MainApp extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainWindow.fxml"));
 			AnchorPane page = (AnchorPane) loader.load();
-
             // Show the scene containing the root layout.
             Scene scene = new Scene(page);
             primaryStage.setScene(scene);
@@ -43,7 +42,6 @@ public class MainApp extends Application {
 	        // Load the fxml file and create a new stage for the popup dialog.
 	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EditAddPerson.fxml"));
 	        AnchorPane page = (AnchorPane) loader.load();
-
 	        // Create the dialog Stage.
 	        Stage dialogStage = new Stage();
 	        dialogStage.setTitle("Edit Person");
@@ -51,15 +49,12 @@ public class MainApp extends Application {
 	        dialogStage.initOwner(primaryStage);
 	        Scene scene = new Scene(page);
 	        dialogStage.setScene(scene);
-
 	        // Set the person into the controller.
 	        PersonEditController controller = loader.getController();
 	        controller.setDialogStage(dialogStage);
 	        controller.setPerson(person);
-
 	        // Show the dialog and wait until the user closes it
 	        dialogStage.showAndWait();
-
 	        return controller.isOkClicked();
 	    } catch (IOException e) {
 	        e.printStackTrace();
