@@ -6,7 +6,7 @@
         <class>model.Person</class>
 
         <properties>
-            <property name= "javax.persistence.jdbc.url" value= "jdbc:mysql://localhost:3306/personlist" />
+            <property name= "javax.persistence.jdbc.url" value= "jdbc:mysql://localhost:3306/personlist?useSSL=false" />
             <property name= "javax.persistence.jdbc.user" value= "Olaf" />
             <property name= "javax.persistence.jdbc.password" value= "Jumbojet01." />
             <property name= "javax.persistence.jdbc.driver" value= "com.mysql.cj.jdbc.Driver"/>
