@@ -26,7 +26,6 @@ public class MainViewController {
 	private static Logger log = Logger.getLogger(MainViewController.class.getName());
 	private MainApp mainApp;
 	private PersonDAO personDAO = new PersonDAO();
-	private SortingUtility sortingUtility = new SortingUtility();
 	@FXML
 	private ListView<Person> personListView;
     @FXML
@@ -139,7 +138,7 @@ public class MainViewController {
 	    	if (action.get() == ButtonType.OK) {
 	    		personDAO.remove(selectedPerson);
 		    	log.info("Person: " + selectedPerson.toString() + " removed.");
-		    	this.setListViewFromDb();
+		    	personData.remove(selectedPerson);
 			}
 	    	
 	    } else {
@@ -160,8 +159,7 @@ public class MainViewController {
     //Handle sort ascending
     @FXML
     private void handleSortAsc() {
-    	Person[] people = personDAO.findAll();
-    	sortingUtility.lastNameSort(people);
+    	SortingUtility.lastNameSort(personData);
     	log.info("button pushed");
     }
 }
