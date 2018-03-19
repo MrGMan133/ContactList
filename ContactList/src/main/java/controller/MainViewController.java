@@ -20,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import model.Person;
 import persistency.PersonDAO;
-import utilities.SortingUtility;
 
 public class MainViewController {
 	private static Logger log = Logger.getLogger(MainViewController.class.getName());
