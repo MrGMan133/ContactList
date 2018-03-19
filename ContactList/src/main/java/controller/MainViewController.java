@@ -1,6 +1,7 @@
 package controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -19,11 +20,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import model.Person;
 import persistency.PersonDAO;
+import utilities.SortingUtility;
 
 public class MainViewController {
 	private static Logger log = Logger.getLogger(MainViewController.class.getName());
 	private MainApp mainApp;
 	private PersonDAO personDAO = new PersonDAO();
+	private SortingUtility sortingUtility = new SortingUtility();
 	@FXML
 	private ListView<Person> personListView;
     @FXML
@@ -153,5 +156,12 @@ public class MainViewController {
     @FXML
     private void handleClose() {
     	Platform.exit();
+    }
+    //Handle sort ascending
+    @FXML
+    private void handleSortAsc() {
+    	Person[] people = personDAO.findAll();
+    	sortingUtility.lastNameSort(people);
+    	log.info("button pushed");
     }
 }
