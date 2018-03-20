@@ -1,10 +1,11 @@
 package controller;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import galekop.be.ContactList.MainApp;
 import javafx.application.Platform;
@@ -15,14 +16,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import model.Person;
 import persistency.PersonDAO;
+import utilities.SortingUtility;
 
 public class MainViewController {
-	private static Logger log = Logger.getLogger(MainViewController.class.getName());
+	static final Logger log = LogManager.getLogger(MainViewController.class.getName());
 	private MainApp mainApp;
 	private PersonDAO personDAO = new PersonDAO();
 	@FXML
@@ -35,11 +38,14 @@ public class MainViewController {
     private Label mailLabel;
     @FXML
     private Label phoneLabel;
+    @FXML
+    private ChoiceBox<String> choiceBoxSort;
     
     private ObservableList<Person> personData = FXCollections.observableArrayList();
     
     public void initialize() {
     	this.setListViewFromDb();
+    	this.setSelectionBoxItems();
         //Selected item listener
         personListView.getSelectionModel().selectedItemProperty().addListener(
         		new ChangeListener<Person>() {
@@ -49,6 +55,19 @@ public class MainViewController {
         				showPersonDetails(newValue);
         			}
 				});
+        choiceBoxSort.getSelectionModel().selectedIndexProperty()
+        .addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue ov, Number value, Number new_value) {
+            	if (new_value.intValue() == 0) {
+            		handleSortFirstName();
+            		log.info("Sorted by first name");
+				}else if (new_value.intValue() == 1) {
+					handleSortLastName();
+					log.info("Sorted by last name");
+				}
+              log.info(new_value.intValue());
+            }
+          });
         
     }
     public ObservableList<Person> getPersonData() {
@@ -65,6 +84,9 @@ public class MainViewController {
 			personData.add(person);
 		}
     	personListView.setItems(personData);
+    }
+    private void setSelectionBoxItems() {
+    	choiceBoxSort.setItems(FXCollections.observableArrayList("First name", "Last Name"));
     }
     //Show the content in the details pane
     private void showPersonDetails(Person person) {
@@ -112,9 +134,7 @@ public class MainViewController {
                 showPersonDetails(selectedPerson);
                 personDAO.update(selectedPerson);
                 log.info("Person: " + selectedPerson.toString() + " updated.");
-                this.setListViewFromDb();
             }
-
         } else {
             // Nothing selected.
             Alert alert = new Alert(AlertType.WARNING);
@@ -146,7 +166,6 @@ public class MainViewController {
 	        alert.setTitle("No Selection");
 	        alert.setHeaderText("No Person Selected");
 	        alert.setContentText("Please select a person in the table.");
-
 	        alert.showAndWait();
 	    }
     }
@@ -157,8 +176,13 @@ public class MainViewController {
     }
     //Handle sort ascending
     @FXML
-    private void handleSortAsc() {
+    private void handleSortLastName() {
     	SortingUtility.lastNameSort(personData);
-    	log.info("button pushed");
+    	log.debug("List sorted on last name");
+    }
+    @FXML
+    private void handleSortFirstName() {
+    	SortingUtility.firstNameSort(personData);
+    	log.debug("List sorted on first name");
     }
 }
