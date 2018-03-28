@@ -181,8 +181,18 @@ public class MainViewController {
     	log.debug("List sorted on last name");
     }
     @FXML
+    private void handleSortLastNameReverse() {
+    	SortingUtility.lastNameSortReverse(personData);
+    	log.debug("List sorted on last name");
+    }
+    @FXML
     private void handleSortFirstName() {
     	SortingUtility.firstNameSort(personData);
+    	log.debug("List sorted on first name");
+    }
+    @FXML
+    private void handleSortFirstNameReverse() {
+    	SortingUtility.firstNameSortReverse(personData);
     	log.debug("List sorted on first name");
     }
 }
